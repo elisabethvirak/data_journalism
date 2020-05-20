@@ -22,4 +22,14 @@ d3.csv("data.csv").then(data =>{
         bottom: 30,
         left: 30
     };
+
+    // define area for chart
+    var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
+    var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+
+    // add SVG to the webpage
+    var svg = d3.select('#scatter')
+        .append('svg')
+        .attr('height', svgHeight)
+        .attr('width', svgWidth);
 });
