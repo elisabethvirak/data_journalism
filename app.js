@@ -39,5 +39,14 @@ d3.csv("data.csv").then(data =>{
     var obesity = data.map(data => +data.obesity);
     var smokes = data.map(data => +data.smokes);
 
-            
+    //create x and y axes
+    var xScalePov = d3.scaleLinear()
+        .domain([0, d3.max(poverty)])
+        .range([0, chartWidth]);
+    var yScalePov = d3.scaleLinear()
+        .domain([])            
+    
+    var colors = d3.scaleLinear()
+        .domain([0,d3.max(data)])
+        .range(['green', 'red'])
 });
