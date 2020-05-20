@@ -32,4 +32,8 @@ d3.csv("data.csv").then(data =>{
         .append('svg')
         .attr('height', svgHeight)
         .attr('width', svgWidth);
+    
+    // add chart area to the SVG
+    var chartGroup = svg.append('g')
+        .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`);
 });
