@@ -26,16 +26,16 @@ var chartGroup = svg.append('g')
     .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`);
  
 
-// set initial parameters
-var selectionX = 'poverty';
-var selectionY = 'householdIncome';
+// // set initial parameters
+// var selectionX = 'poverty';
+// var selectionY = 'householdIncome';
 
-// function to create x-scale
-function xAxis()
+// // function to create x-scale
+// function xAxis()
 
 //----------DATA----------
-d3.csv("data.csv").then(data =>{
-    console.log(data)
+d3.csv("data.csv").then(journalData =>{
+    // console.log(data)
 
     // create variables
     var abbr = data.map(data => data.abbr);
@@ -46,14 +46,24 @@ d3.csv("data.csv").then(data =>{
     var obesity = data.map(data => +data.obesity);
     var smokes = data.map(data => +data.smokes);
 
-    //create x and y axes
-    var xScalePov = d3.scaleLinear()
+    //create x and y axes scale functions
+    var xScale = d3.scaleLinear()
         .domain([0, d3.max(poverty)])
         .range([0, chartWidth]);
-    var yScalePov = d3.scaleLinear()
-        .domain([])            
+    var yScale = d3.scaleLinear()
+        .domain([0, d3.max(householdIncome)])
+        .range([chartHeight, 0]);            
     
-    var colors = d3.scaleLinear()
-        .domain([0,d3.max(data)])
-        .range(['green', 'red'])
+    // var colors = d3.scaleLinear()
+    //     .domain([0,d3.max(data)])
+    //     .range(['green', 'red'])
+
+    //create x and y axes
+    var bottomAxis = d3.axisBottom(xScale);
+    var leftAxis = d3.axisleft(yScale);
+
+    //add axes to the chart
+    chartGroup.append('g')
+        .attr('transorm', `translate(0, ${height})`)
+        .call(bottomAxis);
 });
