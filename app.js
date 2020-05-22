@@ -25,7 +25,14 @@ var svg = d3.select('#scatter')
 var chartGroup = svg.append('g')
     .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`);
  
-    
+
+// set initial parameters
+var selectionX = 'poverty';
+var selectionY = 'householdIncome';
+
+// function to create x-scale
+function xAxis()
+
 //----------DATA----------
 d3.csv("data.csv").then(data =>{
     console.log(data)
