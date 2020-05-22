@@ -34,24 +34,33 @@ var chartGroup = svg.append('g')
 // function xAxis()
 
 //----------DATA----------
-d3.csv("data.csv").then(journalData =>{
+d3.csv("data.csv").then(function(data) {
     // console.log(data)
 
-    // create variables
-    var abbr = data.map(data => data.abbr);
-    var poverty = data.map(data => +data.poverty);
-    var age = data.map(data => +data.age);
-    var householdIncome = data.map(data => +data.income);
-    var healthcare = data.map(data => +data.healthcare);
-    var obesity = data.map(data => +data.obesity);
-    var smokes = data.map(data => +data.smokes);
+    data.forEach(function(journalData) {
+        journalData.poverty = +journalData.poverty;
+        journalData.age = +journalData.age;
+        journalData.income = +journalData.income;
+        journalData.healthcare = +journalData.healthcare;
+        journalData.obesity = +journalData.obesity;
+        journalData.smokes = +journalData.smokes;
+    });
+
+    // // create variables
+    // var abbr = data.map(data => data.abbr);
+    // var poverty = data.map(data => +data.poverty);
+    // var age = data.map(data => +data.age);
+    // var householdIncome = data.map(data => +data.income);
+    // var healthcare = data.map(data => +data.healthcare);
+    // var obesity = data.map(data => +data.obesity);
+    // var smokes = data.map(data => +data.smokes);
 
     //create x and y axes scale functions
     var xScale = d3.scaleLinear()
-        .domain([0, d3.max(poverty)])
+        .domain([0, d3.max(data, d=> d.poverty)])
         .range([0, chartWidth]);
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(householdIncome)])
+        .domain([0, d3.max(data, d => d.householdIncome)])
         .range([chartHeight, 0]);            
     
     // var colors = d3.scaleLinear()
@@ -60,10 +69,12 @@ d3.csv("data.csv").then(journalData =>{
 
     //create x and y axes
     var bottomAxis = d3.axisBottom(xScale);
-    var leftAxis = d3.axisleft(yScale);
+    var leftAxis = d3.axisLeft(yScale);
 
     //add axes to the chart
     chartGroup.append('g')
-        .attr('transorm', `translate(0, ${height})`)
+        .attr('transform', `translate(0, ${chartHeight})`)
         .call(bottomAxis);
+    chartGroup.append('g')
+        .call(leftAxis);
 });
