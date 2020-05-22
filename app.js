@@ -1,14 +1,14 @@
 //----------SVG----------
 //initialize SVG area
-var svgWidth = 1000;
-var svgHeight = 700;
+var svgWidth = 750;
+var svgHeight = 500;
 
 // define margins for the SVG
 var chartMargin = {
     top:30,
     right: 30,
     bottom: 30,
-    left: 30
+    left: 60
 };
 
 // define area for chart
@@ -33,10 +33,11 @@ var chartGroup = svg.append('g')
 // // function to create x-scale
 // function xAxis()
 
-//----------DATA----------
+//----------PLOT----------
 d3.csv("data.csv").then(function(data) {
     // console.log(data)
 
+    //cast data as numbers
     data.forEach(function(journalData) {
         journalData.poverty = +journalData.poverty;
         journalData.age = +journalData.age;
@@ -46,25 +47,16 @@ d3.csv("data.csv").then(function(data) {
         journalData.smokes = +journalData.smokes;
     });
 
-    // // create variables
-    // var abbr = data.map(data => data.abbr);
-    // var poverty = data.map(data => +data.poverty);
-    // var age = data.map(data => +data.age);
-    // var householdIncome = data.map(data => +data.income);
-    // var healthcare = data.map(data => +data.healthcare);
-    // var obesity = data.map(data => +data.obesity);
-    // var smokes = data.map(data => +data.smokes);
-
     //create x and y axes scale functions
     var xScale = d3.scaleLinear()
         .domain([0, d3.max(data, d=> d.poverty)])
         .range([0, chartWidth]);
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.householdIncome)])
+        .domain([0, d3.max(data, d => d.income)])
         .range([chartHeight, 0]);            
     
     // var colors = d3.scaleLinear()
-    //     .domain([0,d3.max(data)])
+    //     .domain([0,d3.max(data, d => xScale(d.poverty))])
     //     .range(['green', 'red'])
 
     //create x and y axes
@@ -77,4 +69,15 @@ d3.csv("data.csv").then(function(data) {
         .call(bottomAxis);
     chartGroup.append('g')
         .call(leftAxis);
+
+    //add circle
+    var circles = chartGroup.selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', d => xScale(d.poverty))
+        .attr('cy', d => yScale(d.income))
+        .attr('r', '7')
+        // .attr('fill', colors)
+        .attr('opacity', '.7');
 });
