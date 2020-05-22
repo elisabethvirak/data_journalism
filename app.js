@@ -7,7 +7,7 @@ var svgHeight = 500;
 var chartMargin = {
     top:30,
     right: 30,
-    bottom: 30,
+    bottom: 60,
     left: 60
 };
 
@@ -52,7 +52,7 @@ d3.csv("data.csv").then(function(data) {
         .domain([0, d3.max(data, d=> d.poverty)])
         .range([0, chartWidth]);
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.income)])
+        .domain([0, d3.max(data, d => d.healthcare)])
         .range([chartHeight, 0]);            
     
     // var colors = d3.scaleLinear()
@@ -76,8 +76,23 @@ d3.csv("data.csv").then(function(data) {
         .enter()
         .append('circle')
         .attr('cx', d => xScale(d.poverty))
-        .attr('cy', d => yScale(d.income))
+        .attr('cy', d => yScale(d.healthcare))
         .attr('r', '7')
         // .attr('fill', colors)
         .attr('opacity', '.7');
+
+    //add axes labels
+    //y axis label
+    chartGroup.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 0 - chartMargin.left + 20)
+        .attr('x', 0 - (chartHeight / 2))
+        .attr('dy', '1em')
+        .attr('class', 'aText')
+        .text('Lacks Healthcare (%)')
+    //x axis label
+    chartGroup.append('text')
+        .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + chartMargin.top + 20})`)
+        .attr('class', 'aText')
+        .text('In Poverty (%)')
 });
