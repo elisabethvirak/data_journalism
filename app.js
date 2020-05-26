@@ -77,9 +77,21 @@ d3.csv("data.csv").then(function(data) {
         .append('circle')
         .attr('cx', d => xScale(d.poverty))
         .attr('cy', d => yScale(d.healthcare))
-        .attr('r', '7')
+        .attr('r', '12')
         // .attr('fill', colors)
-        .attr('opacity', '.7');
+        .attr('opacity', '.8');
+    
+    var stateText = chartGroup.append('g')
+        .selectAll('text')
+        .data(data)
+        .enter()
+        .append('text')
+        .attr('class', 'stateText')
+        .attr('x', d => xScale(d.poverty))
+        .attr('y', d => yScale(d.healthcare))
+        .attr('dy', '.40em')
+        // .attr('text-anchor', 'middle')
+        .text(d => d.abbr);
 
     //add axes labels
     //y axis label
