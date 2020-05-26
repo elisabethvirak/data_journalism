@@ -1,14 +1,14 @@
 //----------SVG----------
 //initialize SVG area
-var svgWidth = 750;
-var svgHeight = 500;
+var svgWidth = 850;
+var svgHeight = 600;
 
 // define margins for the SVG
 var chartMargin = {
     top:30,
     right: 30,
     bottom: 60,
-    left: 60
+    left: 80
 };
 
 // define area for chart
@@ -25,18 +25,11 @@ var svg = d3.select('#scatter')
 var chartGroup = svg.append('g')
     .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`);
  
-
-// // set initial parameters
-// var selectionX = 'poverty';
-// var selectionY = 'householdIncome';
-
-// // function to create x-scale
-// function xAxis()
-
 //----------PLOT----------
 d3.csv("data.csv").then(function(data) {
     // console.log(data)
 
+    //----------DATA----------
     //cast data as numbers
     data.forEach(function(journalData) {
         journalData.poverty = +journalData.poverty;
@@ -47,6 +40,7 @@ d3.csv("data.csv").then(function(data) {
         journalData.smokes = +journalData.smokes;
     });
 
+    //----------AXES----------
     //create x and y axes scale functions
     var xScale = d3.scaleLinear()
         .domain([0, d3.max(data, d=> d.poverty)])
@@ -70,6 +64,23 @@ d3.csv("data.csv").then(function(data) {
     chartGroup.append('g')
         .call(leftAxis);
 
+    //add axes labels
+    //y axis label
+    chartGroup.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 0 - chartMargin.left + 20)
+        .attr('x', 0 - (chartHeight / 2))
+        .attr('dy', '1em')
+        .attr('class', 'aText')
+        .text('Lacks Healthcare (%)')
+    //x axis label
+    chartGroup.append('text')
+        .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + chartMargin.top + 20})`)
+        .attr('class', 'aText')
+        .text('In Poverty (%)')
+
+        
+    //----------DATAPOINTS----------
     //add circle
     var circles = chartGroup.selectAll('circle')
         .data(data)
@@ -92,18 +103,24 @@ d3.csv("data.csv").then(function(data) {
         .attr('dy', '.40em')
         .text(d => d.abbr);
 
-    //add axes labels
-    //y axis label
-    chartGroup.append('text')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - chartMargin.left + 20)
-        .attr('x', 0 - (chartHeight / 2))
-        .attr('dy', '1em')
-        .attr('class', 'aText')
-        .text('Lacks Healthcare (%)')
-    //x axis label
-    chartGroup.append('text')
-        .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + chartMargin.top + 20})`)
-        .attr('class', 'aText')
-        .text('In Poverty (%)')
+    //----------TOOLTIP----------
+    //add tooltip to display data for each state
+    var toolTip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([30,-30])
+        .html(function(d) {
+            return (`${d.abbr} - ${d.state}<br>Lacks Healthcare: ${d.healthcare}%<br>In Poverty: ${d.poverty}%`);
+        });
+    
+    //add tooltip to the chart
+    chartGroup.call(toolTip);
+
+    //add event listeners to display and hide tooltip
+    circles.on('mouseover', function(data) {
+        toolTip.show(data, this);
+    })
+        .on('mouseout', function(data, index) {
+            toolTip.hide(data);
+        });
+    
 });
