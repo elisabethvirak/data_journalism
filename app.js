@@ -55,9 +55,9 @@ d3.csv("data.csv").then(function(data) {
         .domain([0, d3.max(data, d => d.healthcare)])
         .range([chartHeight, 0]);            
     
-    // var colors = d3.scaleLinear()
-    //     .domain([0,d3.max(data, d => xScale(d.poverty))])
-    //     .range(['green', 'red'])
+    var colors = d3.scaleLinear()
+        .domain([0, d3.max(data)])
+        .range(['#FFB832', '#C61C6F'])
 
     //create x and y axes
     var bottomAxis = d3.axisBottom(xScale);
@@ -78,9 +78,9 @@ d3.csv("data.csv").then(function(data) {
         .attr('cx', d => xScale(d.poverty))
         .attr('cy', d => yScale(d.healthcare))
         .attr('r', '12')
-        // .attr('fill', colors)
+        .attr('fill', 'red')
         .attr('opacity', '.8');
-    
+    //add state abbreviations to circles
     var stateText = chartGroup.append('g')
         .selectAll('text')
         .data(data)
@@ -90,7 +90,6 @@ d3.csv("data.csv").then(function(data) {
         .attr('x', d => xScale(d.poverty))
         .attr('y', d => yScale(d.healthcare))
         .attr('dy', '.40em')
-        // .attr('text-anchor', 'middle')
         .text(d => d.abbr);
 
     //add axes labels
