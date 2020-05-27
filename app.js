@@ -24,7 +24,7 @@ var svg = d3.select('#scatter')
 // add chart area to the SVG
 var chartGroup = svg.append('g')
     .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`);
- 
+
 //----------PLOT----------
 d3.csv("data.csv").then(function(data) {
     // console.log(data)
